@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FAQ Chatbot</title>
+</head>
+<body>
+    <h1>FAQ Chatbot</h1>
+    <input type="text" id="question" placeholder="Enter your question here">
+    <button onclick="fetchAnswer()">Ask</button>
+    <p id="answer"></p>
+
+    <script>
+        function fetchAnswer() {
+            const question = document.getElementById('question').value;
+            // Build the URL by encoding the question parameter
+            const url = `http://127.0.0.1:5000/faq?q=${encodeURIComponent(question)}`;
+
+            // Use the fetch API to request an answer from your Flask API
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('answer').textContent = data.answer;
+                })
+                .catch(error => {
+                    document.getElementById('answer').textContent = 'Error: ' + error;
+                });
+        }
+    </script>
+</body>
+</html>
