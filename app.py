@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-import faq_data
+from faq_data import faq_data
 import os
 
 app = Flask(__name__)
@@ -31,7 +31,7 @@ def home():
 @app.route('/faq', methods=['GET'])
 def get_answer():
     question = request.args.get('q')  # Get question from URL, e.g., ?q=What+is+AI?
-    answer = faq_data.faq_data.get(question, "Sorry, I don't have an answer for that.")
+    answer = faq_data.get(question, "Sorry, I don't have an answer for that.")
     return jsonify({'question': question, 'answer': answer})
 
 if __name__ == '__main__':
