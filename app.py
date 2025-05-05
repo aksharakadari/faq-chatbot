@@ -1,43 +1,29 @@
-from flask import Flask, request, jsonify, render_template
-from faq_data import faq_data
-import os
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-@app.route('/faq', methods=['GET'])
-def get_answer():
-    question = request.args.get('q')
-    answer = faq_data.faq_data.get(question, "Sorry, I don't have an answer for that.")
-    return jsonify({'question': question, 'answer': answer})
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
 from flask import Flask, request, jsonify
-import faq_data  # Ensure faq_data.py is in the same folder as app.py
+from flask_cors import CORS  # Import CORS module
+import os  # Import os for environment variables
+from faq_data import faq_data  # Import the dictionary directly
 
 app = Flask(__name__)
+CORS(app)  # Enables Cross-Origin requests
 
-# Home page with a welcome message.
 @app.route('/')
 def home():
     return "Welcome to my chatbot!"
 
-# FAQ endpoint for handling questions via query parameter "q".
 @app.route('/faq', methods=['GET'])
 def get_answer():
-    question = request.args.get('q')  # Get question from URL, e.g., ?q=What+is+AI?
+    # Retrieve the question from the query string parameter "q"
+    question = request.args.get('q')
+    
+    # Optionally, return an error if no question is provided
+    if not question:
+        return jsonify({'error': 'Please provide a question using the "q" parameter.'}), 400
+
+    # Use the dictionary's .get() method to find the answer or return a default message
     answer = faq_data.get(question, "Sorry, I don't have an answer for that.")
     return jsonify({'question': question, 'answer': answer})
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-import os
-if __name__ == '__main__':
+    # Use PORT from environment variables if available, otherwise default to 5000
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=False)
