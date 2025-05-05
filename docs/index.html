@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FAQ Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #chatbox {
+            width: 50%;
+            margin: auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        #answer {
+            margin-top: 10px;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Ask the FAQ Chatbot</h2>
+    <input type="text" id="question" placeholder="Enter your question">
+    <button type="button" onclick="askChatbot()">Ask</button>
+
+    <div id="chatbox">
+        <p id="answer">Chatbot response will appear here...</p>
+    </div>
+
+    <script>
+        function askChatbot() {
+            const question = document.getElementById("question").value.trim();
+            if (!question) {
+                document.getElementById("answer").innerText = "Please enter a question.";
+                return;
+            }
+            
+            // Update the URL below if you are testing locally:
+            // For local testing: "http://127.0.0.1:5000/faq?q="
+            const url = `http://127.0.0.1:5000/faq?q=${encodeURIComponent(question)}`;
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById("answer").innerText = data.error;
+                    } else {
+                        document.getElementById("answer").innerText = data.answer;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById("answer").innerText = "Error fetching response.";
+                    console.error("Fetch Error:", error);
+                });
+        }
+    </script>
+
+</body>
+</html>
