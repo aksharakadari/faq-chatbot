@@ -37,7 +37,6 @@
 
             // Replace "YOUR_RENDER_API_URL" with your deployed Render backend URL
             const apiUrl = "https://aksharakadari.onrender.com/faq?q=" + encodeURIComponent(question);
-
             try {
                 const response = await fetch(apiUrl);
                 if (!response.ok) {
