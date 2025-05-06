@@ -1,18 +1,11 @@
-from flask import Flask, render_template, jsonify, request
-from faq_data import faq_answers
-
+from flask import Flask, render_template
+from flask_cors import CORS
+CORS(app)  # Add this right after initializing Flask
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    # This will serve the index.html template located inside the templates folder
-    return render_template('index.html')
-
-@app.route('/faq', methods=['GET'])
-def faq():
-    question = request.args.get('q', '').strip()
-    answer = faq_answers.get(question, "I don't have an answer for that yet.")
-    return jsonify({"answer": answer})
+    return render_template('index.html')  # Make sure index.html exists in the 'templates' folder
 
 if __name__ == '__main__':
     app.run(debug=True)
