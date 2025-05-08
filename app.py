@@ -1,20 +1,16 @@
-from flask import Flask, render_template, jsonify, request
-from flask_cors import CORS  # Import CORS
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from faq_data import faq_data  # Import FAQ data
 
-app = Flask(__name__)      # Define your Flask app first.
-CORS(app)                  # Now call CORS with the defined app.
+# ✅ Define the Flask app before using @app.route()
+app = Flask(__name__)
+CORS(app)  # Enable CORS
 
-# Define your routes below:
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-@app.route('/faq', methods=['GET'])
-def faq():
-    question = request.args.get('q', '').strip()
-    # Use your logic here. For example:
-    answer = "This is a sample answer. Replace this with your actual logic."
+@app.route("/api/faq", methods=["GET"])
+def get_answer():
+    question = request.args.get("question", "").lower().strip()  # Convert to lowercase & remove extra spaces
+    answer = faq_data.get(question, "Sorry, I don't have an answer for that.")
     return jsonify({"answer": answer})
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)

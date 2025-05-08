@@ -4,50 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ Chatbot</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        input[type="text"] {
-            width: 300px;
-            padding: 10px;
-            margin-right: 10px;
-        }
-        button {
-            padding: 10px 20px;
-        }
-        #response {
-            margin-top: 20px;
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 <body>
-    <h1>Ask the FAQ Chatbot</h1>
-    <input type="text" id="question" placeholder="What is AI?">
-    <button onclick="askChatbot()">Ask</button>
-    <div id="response"></div>
+    <div class="chat-container">
+        <input type="text" id="user-input" placeholder="Ask me anything..." />
+        <button onclick="getAnswer()">Ask</button>
+        <div id="response"></div>
+    </div>
 
     <script>
-        async function askChatbot() {
-            const question = document.getElementById('question').value;
-            const responseDiv = document.getElementById('response');
+        // ✅ Define API URL globally
+        const apiUrl = "https://faq-chatbot-dcmt.onrender.com/api/faq";
 
-            // Replace "YOUR_RENDER_API_URL" with your deployed Render backend URL
-            const apiUrl = "https://faq-chatbot-dcmt.onrender.com/faq?q=" + encodeURIComponent(question);
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                responseDiv.textContent = data.answer;
-            } catch (error) {
-                responseDiv.textContent = 'Error fetching response.';
-                console.error('Fetch error:', error);
-            }
+        function getAnswer() {
+            const question = document.getElementById("user-input").value;
+
+            fetch(`${apiUrl}?question=${encodeURIComponent(question)}`, { mode: 'cors' })  // ✅ Ensuring API connectivity
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById("response").textContent = data.answer;
+                })
+                .catch(error => {
+                    document.getElementById("response").textContent = "Error fetching response.";
+                    console.error("Fetch error:", error);
+                });
         }
     </script>
 </body>
