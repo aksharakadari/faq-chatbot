@@ -1,43 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQ Chatbot</title>
-
-    <!-- ✅ Use relative paths for GitHub Pages -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ Chatbot</title>
+  <!-- Updated to use correct relative paths for GitHub Pages -->
+  <link rel="stylesheet" href="static/style.css">
+  <link rel="icon" type="image/x-icon" href="static/favicon.ico">
 </head>
 <body>
-    <div class="chat-container">
-        <input type="text" id="user-input" placeholder="Ask me anything..." />
-        <button onclick="getAnswer()">Ask</button>
-        <div id="response"></div>
-    </div>
+  <div class="chat-container">
+    <input type="text" id="user-input" placeholder="Ask me anything..." />
+    <button onclick="getAnswer()">Ask</button>
+    <div id="response"></div>
+  </div>
 
-    <script>
-        // ✅ Define API URL globally
-        const apiUrl = "https://faq-chatbot-dcmt.onrender.com/api/faq";
+  <script>
+    // Define the API endpoint for chatbot responses
+    const apiUrl = "https://faq-chatbot-dcmt.onrender.com/api/faq";
 
-        function getAnswer() {
-            const question = document.getElementById("user-input").value;
-
-            fetch(`${apiUrl}?question=${encodeURIComponent(question)}`, { mode: 'cors' })  // ✅ Ensuring API connectivity
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    document.getElementById("response").textContent = data.answer;
-                })
-                .catch(error => {
-                    document.getElementById("response").textContent = "Error fetching response.";
-                    console.error("Fetch error:", error);
-                });
-        }
-    </script>
+    // Function to handle the 'Ask' button click
+    function getAnswer() {
+      const question = document.getElementById("user-input").value;
+      fetch(`${apiUrl}?question=${encodeURIComponent(question)}`, { mode: 'cors' })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          document.getElementById("response").textContent = data.answer;
+        })
+        .catch(error => {
+          document.getElementById("response").textContent = "Error fetching response.";
+          console.error("Fetch error:", error);
+        });
+    }
+  </script>
 </body>
 </html>
